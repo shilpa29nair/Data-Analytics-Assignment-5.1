@@ -1,0 +1,62 @@
+Assignment 5.1
+
+# 1. If Z is norm (mean = 0, sd = 1)
+#  Find P(Z > 2.64)
+#  Find P(|Z| > 1.39)
+
+pnorm(2.64, mean = 0, sd = 1, lower.tail = FALSE)
+# P(Z > 2.64) is 0.0041
+
+#------------------------
+
+#  Find P(|Z| > 1.39)
+#  = 1 - P(-1.39 < X < 1.39)
+1 - (pnorm(1.39, mean = 0, sd=1) - pnorm(-1.39, mean = 0, sd=1))
+#  P(|Z| > 1.39) is 0.1645
+
+#------------------------
+
+# Suppose p = the proportion of students who are admitted to the graduate school 
+# of the University of California at Berkeley, and suppose that a public relation 
+# officer boasts that UCB has historically had a 40% acceptance rate for its graduate
+# school. Consider the data stored in the table UCBAdmissions from 1973. Assuming 
+# these observations constituted a simple random sample, are they consistent with 
+# the officer's claim, or do they provide evidence that the acceptance rate was 
+# significantly less than 40%? Use an alpha = 0.01 significance level.
+
+View(UCBAdmissions)
+class(UCBAdmissions)
+
+# Our null hypothesis, H0 is p= 0.40
+# Alternative Hypothesis , Ha is p < 0.4
+
+-qnorm(0.99)
+# z alpha = -2.326348
+
+A <- as.data.frame(UCBAdmissions)
+head(A)
+
+xtabs(Freq ~ Admit, data = A)
+
+# ow we calculate the value of the test statistic.
+phat <- 1755/(1755 + 2771)
+(phat - 0.4)/sqrt(0.4 * 0.6/(1755 + 2771))
+# t statistics is -1.680919
+# Our test statistic is not less than ???2.32,
+
+prop.test(1755, 1755 + 2771, p = 0.4, alternative = "less",
+          conf.level = 0.99, correct = FALSE)
+
+# p- value i.e. 0.046 is greater than alpha i.e. 0.01
+
+library(IPSUR)
+library(HH)
+temp <- prop.test(1755, 1755 + 2771, p = 0.4, alternative = "less",
+                    + conf.level = 0.99, correct = FALSE)
+plot(temp, "Hypoth")
+ 
+# so it does not fall into the critical region. 
+# Therefore, we fail to reject the null hypothesis that the true proportion 
+# of students admitted to graduate school is less than 40% and 
+# say that the observed data are consistent with the officer's claim at
+# the alpha = 0.01 significance level.
